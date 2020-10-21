@@ -974,7 +974,7 @@ body.ie ._ibg img {
   height: 32px;
   width: 32px;
   border-radius: 8px;
-  background: url("../img/user2.webp") 0 0/100% no-repeat;
+  background: url("../img/user2.png") 0 0/100% no-repeat;
 }
 
 .header__pers {
@@ -1059,7 +1059,7 @@ body.ie ._ibg img {
 .header__button {
   width: 40px;
   height: 31px;
-  background: #e2e2e2 url("../img/lupa.webp") 0 0/auto 100% no-repeat;
+  background: #e2e2e2 url("../img/lupa.png") 0 0/auto 100% no-repeat;
   border-radius: 0px 10px 10px 0px;
 }
 
@@ -1073,7 +1073,7 @@ body.ie ._ibg img {
   height: 32px;
   width: 32px;
   border-radius: 8px;
-  background: url("../img/insta1.webp") 0 0/100% no-repeat;
+  background: url("../img/insta1.png") 0 0/100% no-repeat;
   margin-left: 14px;
   -webkit-transition: all 00.4s ease 0s;
   -o-transition: all 00.4s ease 0s;
@@ -1084,7 +1084,7 @@ body.ie ._ibg img {
   height: 32px;
   width: 32px;
   border-radius: 8px;
-  background: url("../img/watsup1.webp") 0 0/100% no-repeat;
+  background: url("../img/watsup1.png") 0 0/100% no-repeat;
   margin-left: 14px;
   -webkit-transition: all 00.3s ease 0s;
   -o-transition: all 00.3s ease 0s;
@@ -1095,7 +1095,7 @@ body.ie ._ibg img {
   height: 32px;
   width: 32px;
   border-radius: 8px;
-  background: url("../img/mail1.webp") 0 0/100% no-repeat;
+  background: url("../img/mail1.png") 0 0/100% no-repeat;
   margin-left: 14px;
   -webkit-transition: all 00.3s ease 0s;
   -o-transition: all 00.3s ease 0s;
@@ -1127,7 +1127,7 @@ body.ie ._ibg img {
   height: 100px;
   width: 100px;
   padding: 15px 0px;
-  background: url("../img/nuts.webp") 0 0/100% no-repeat;
+  background: url("../img/nuts.png") 0 0/100% no-repeat;
 }
 
 .header__text {
@@ -1199,19 +1199,19 @@ body.ie ._ibg img {
 }
 
 .menu__catalog {
-  background: url("../img/catalog.webp") 0px 7px/auto 75% no-repeat;
+  background: url("../img/catalog.png") 0px 7px/auto 75% no-repeat;
 }
 
 .menu__about {
-  background: url("../img/about.webp") 0 9px/auto 65% no-repeat;
+  background: url("../img/about.png") 0 9px/auto 65% no-repeat;
 }
 
 .menu__reciepes {
-  background: url("../img/reciepes.webp") 0 9px/auto 65% no-repeat;
+  background: url("../img/reciepes.png") 0 9px/auto 65% no-repeat;
 }
 
 .menu__cat {
-  background: url("../img/cart.webp") 0 9px/auto 65% no-repeat;
+  background: url("../img/cart.png") 0 9px/auto 65% no-repeat;
 }
 
 .icon-menu {
@@ -1227,7 +1227,6 @@ body.ie ._ibg img {
 
 .artwork {
   height: 670px;
-  background: url("../img/artwork.webp") 0 0/100% auto no-repeat;
   margin-top: 142px;
 }
 
@@ -1238,15 +1237,15 @@ body.ie ._ibg img {
   }
 
   .header__insta:hover {
-    background: url("../img/instahover.webp") 0 0/100% no-repeat;
+    background: url("../img/instahover.jpg") 0 0/100% no-repeat;
   }
 
   .header__watsup:hover {
-    background: url("../img/whatsapp-hover.webp") 0 0/100% no-repeat;
+    background: url("../img/whatsapp-hover.png") 0 0/100% no-repeat;
   }
 
   .header__mail:hover {
-    background: url("../img/mailhover.webp") 0 0/100% no-repeat;
+    background: url("../img/mailhover.png") 0 0/100% no-repeat;
   }
 
   .menu a:hover {
@@ -1400,6 +1399,7 @@ body.ie ._ibg img {
 
   .menu__body:after {
     content: "";
+    display: none;
     background: #1c242a;
     position: fixed;
     top: 0;
@@ -1511,12 +1511,24 @@ body.ie ._ibg img {
 .rating__activeline{background:url("../img/icons/bg_rating_active.svg") 0 0 no-repeat}
 #map{background:url("../img/icons/loading.gif") center/50px no-repeat}
 .popup__close{background:url("../img/icons/close.svg") 0 0 no-repeat}
+.header__imgpers{background:url("../img/user2.webp") 0 0/100% no-repeat}
+.header__button{background:#e2e2e2 url("../img/lupa.webp") 0 0/auto 100% no-repeat}
+.header__insta{background:url("../img/insta1.webp") 0 0/100% no-repeat}
+.header__watsup{background:url("../img/watsup1.webp") 0 0/100% no-repeat}
+.header__mail{background:url("../img/mail1.webp") 0 0/100% no-repeat}
+.header__logo{background:url("../img/nuts.webp") 0 0/100% no-repeat}
+.menu__catalog{background:url("../img/catalog.webp") 0px 7px/auto 75% no-repeat}
+.menu__about{background:url("../img/about.webp") 0 9px/auto 65% no-repeat}
+.menu__reciepes{background:url("../img/reciepes.webp") 0 9px/auto 65% no-repeat}
+.menu__cat{background:url("../img/cart.webp") 0 9px/auto 65% no-repeat}
 }
 
  @media (min-width: 932px){
 
 @supports (-webkit-appearance:none){
-
+.header__insta:hover{background:url("../img/instahover.webp") 0 0/100% no-repeat}
+.header__watsup:hover{background:url("../img/whatsapp-hover.webp") 0 0/100% no-repeat}
+.header__mail:hover{background:url("../img/mailhover.webp") 0 0/100% no-repeat}
 }
 
 }

@@ -1229,7 +1229,7 @@ body.ie ._ibg img {
 
 .artwork {
   height: 670px;
-  background: url("../img/artwork.jpg") 0 0/100% auto no-repeat;
+  background: url("../img/artwork.jpg") center/cover auto no-repeat;
   margin-top: 142px;
 }
 

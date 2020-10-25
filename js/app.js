@@ -1519,17 +1519,17 @@ if (sliders) {
 function sliders_bild_callback(params) { }
 
 let slider_intro = new Swiper('.slider-intro__body', {
-	/*
-	effect: 'fade',
-	autoplay: {
-		delay: 3000,
-		disableOnInteraction: false,
-	},
-	*/
+	
+	// effect: 'fade',
+	// autoplay: {
+	// 	delay: 3000,
+	// 	disableOnInteraction: false,
+	// },
+	
 	observer: true,
 	observeParents: true,
 	slidesPerView: 1,
-	spaceBetween: 0,
+	spaceBetween: 50,
 	autoHeight: true,
 	speed: 800,
 	//touchRatio: 0,
@@ -1538,10 +1538,10 @@ let slider_intro = new Swiper('.slider-intro__body', {
 	//preloadImages: false,
 	//lazy: true,
 	// Dotts
-	//pagination: {
-	//	el: '.slider-quality__pagging',
-	//	clickable: true,
-	//},
+	// pagination: {
+	// 	el: '.slider-quality__pagging',
+	// 	clickable: true,
+	// },
 	// Arrows
 	navigation: {
 		nextEl: '.slider-intro__control-lft',
@@ -1555,15 +1555,15 @@ let slider_intro = new Swiper('.slider-intro__body', {
 			autoHeight: true,
 		},
 		768: {
-			slidesPerView: 2,
+			slidesPerView: 1,
 			spaceBetween: 20,
 		},
 		992: {
-			slidesPerView: 3,
+			slidesPerView: 1,
 			spaceBetween: 20,
 		},
 		1268: {
-			slidesPerView: 4,
+			slidesPerView: 1,
 			spaceBetween: 30,
 		},
 	},
@@ -1574,7 +1574,7 @@ let slider_intro = new Swiper('.slider-intro__body', {
 	// 	},
 	// }
 	// And if we need scrollbar
-	//scrollbar: {
-	//	el: '.swiper-scrollbar',
-	//},
+	// scrollbar: {
+	// 	el: '.swiper-scrollbar',
+	// },
 });

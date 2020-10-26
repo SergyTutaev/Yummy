@@ -1205,8 +1205,8 @@ if (goto_links) {
 function _goto(target_block, speed, offset = 0) {
 	let header = '';
 	//OffsetHeader
-	//if (window.innerWidth < 992) {
-	//	header = 'header';
+	//if (window.innerWidth < 1992) {
+		header = 'header';
 	//}
 	let options = {
 		speedAsDuration: true,

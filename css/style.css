@@ -991,6 +991,7 @@ body.ie ._ibg img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  position: relative;
 }
 
 .header__phone {
@@ -1048,8 +1049,8 @@ body.ie ._ibg img {
 }
 
 .header__input {
-  width: 160px;
-  height: 31px;
+  width: 130px;
+  height: 32px;
   background: #e2e2e2;
   padding-left: 10px;
   padding-top: 10px;
@@ -1061,7 +1062,7 @@ body.ie ._ibg img {
 
 .header__button {
   width: 40px;
-  height: 31px;
+  height: 32px;
   background: #e2e2e2 url("../img/lupa.png") 0 0/auto 100% no-repeat;
   border-radius: 0px 10px 10px 0px;
 }
@@ -1685,6 +1686,43 @@ body.ie ._ibg img {
 }
 
 @media (max-width: 479.98px) {
+  .header__search {
+    width: 32px;
+    position: relative;
+    z-index: 5;
+  }
+
+  .header__search input::-webkit-input-placeholder {
+    font-size: 0px;
+  }
+
+  .header__search input::-moz-placeholder {
+    font-size: 0px;
+  }
+
+  .header__search input:-ms-input-placeholder {
+    font-size: 0px;
+  }
+
+  .header__search input::-ms-input-placeholder {
+    font-size: 0px;
+  }
+
+  .header__search input::placeholder {
+    font-size: 0px;
+  }
+
+  .header__input {
+    border-radius: 8px;
+    width: 32px;
+    padding-left: 32px;
+    background: #e2e2e2 url("../img/lupa.png") 0 0/auto 100% no-repeat;
+  }
+
+  .header__input:focus {
+    width: 190px;
+  }
+
   .slider-intro__control-lft {
     display: none;
   }
@@ -1782,7 +1820,7 @@ body.ie ._ibg img {
  @media (max-width: 479.98px){
 
 @supports (-webkit-appearance:none){
-
+.header__input{background:#e2e2e2 url("../img/lupa.webp") 0 0/auto 100% no-repeat}
 }
 
 }

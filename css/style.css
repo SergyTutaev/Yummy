@@ -1346,7 +1346,7 @@ body.ie ._ibg img {
 }
 
 .page .catalog__title {
-  font-size: calc( 0.02201 * 100vw + 13.74757px);
+  font-size: calc( 0.00906 * 100vw + 18.60194px);
   text-transform: uppercase;
   letter-spacing: 2px;
 }
@@ -1380,13 +1380,7 @@ body.ie ._ibg img {
 }
 
 .page .catalog__wripper {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
+  display: none;
 }
 
 .page__reciepts {
@@ -2129,6 +2123,16 @@ body.ie ._ibg img {
   .page .catalog__title :before,
   .page .catalog__title :after {
     height: 2px;
+  }
+
+  .page .catalog__wripper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
   }
 }
 

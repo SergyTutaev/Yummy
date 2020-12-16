@@ -3,17 +3,17 @@ function email_test(input) {
 }
 
 //document.addEventListener("DOMContentLoaded", function () {})
-const hdTopCnt = document.querySelector('.header__top-center');
+const headerTopCenter = document.querySelector('.header__top-center');
 document.addEventListener("click", click)
 
 function click(e) {
    if (e.target.className === ('header__fake-search')) {
       //console.log(e.target);
-      hdTopCnt.classList.add('_active');
+      headerTopCenter.classList.add('_active');
    }
 
    else if (!e.target.closest('.header__top-center')) {
-      hdTopCnt.classList.remove('_active');
+      headerTopCenter.classList.remove('_active');
    }
 }
 
@@ -980,6 +980,35 @@ if (quantityButtons.length > 0) {
 		});
 	}
 }
+const fixedBlock = document.querySelector('.catalog__menu'),
+   catalogTitle = document.querySelector('.catalog__title'),
+   widthBlock = fixedBlock.clientWidth,
+   sliderBlock = document.querySelector('.intro__content');
+
+
+const fixedScrollBlock = () => {
+   let scrollDistance = window.scrollY;
+   offsetTop = sliderBlock.clientHeight;
+   console.log(widthBlock);
+   
+   //console.log(offsetTop);
+   //console.log(scrollDistance);
+if (scrollDistance > offsetTop ){
+   fixedBlock.classList.add('fixed');
+   fixedBlock.style.width = widthBlock + 'px';
+   catalogTitle.classList.add('himargin')
+
+}else{
+   fixedBlock.classList.remove('fixed', '_container');
+   catalogTitle.classList.remove('himargin')
+}
+
+
+}
+
+
+window.addEventListener('scroll', fixedScrollBlock);
+
 let scr_body = document.querySelector('body');
 let scr_blocks = document.querySelectorAll('._scr-sector');
 let scr_items = document.querySelectorAll('._scr-item');

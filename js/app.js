@@ -19,8 +19,8 @@ function click(e) {
 
 //---------------------------------------------------------
 let select = function () {
-   let selectHeader = document.querySelectorAll('.select-showcase__header')
-   let selectItem = document.querySelectorAll('.select-showcase__item')
+   let selectHeader = document.querySelectorAll('.select-weight__header')
+   let selectItem = document.querySelectorAll('.select-weight__item')
    selectHeader.forEach(item => {
       item.addEventListener('click', selectToogle)
    });
@@ -35,15 +35,40 @@ let select = function () {
 
    function selectChoose() {
       let text = this.innerText,
-         select = this.closest('.select-showcase'),
-      currentText = select.querySelector('.select-showcase__current');
+         select = this.closest('.select-weight'),
+         weight = parseInt(this.dataset.weight),
+         price = parseInt(this.closest('.showcase__select').previousElementSibling.textContent),
+         currentText = select.querySelector('.select-weight__current'),
+         currentWeight = parseInt(currentText.getAttribute('data-weight'));     
       currentText.innerText = text;
-      select.classList.remove('active')
+      currentText.dataset.weight = weight;
+      select.classList.remove('active');
+      price = price * weight / currentWeight ;
+      this.closest('.showcase__select').previousElementSibling.textContent = price;
    }
-
 };
 
 select();
+
+
+
+document.querySelectorAll('.select-quantity').forEach(el => {
+   el.addEventListener('click', (e) => {
+      if (e.target.classList.contains('select-quantity__plus')) {
+         let qt = parseInt(el.childNodes[3].textContent);
+         qt++;
+         el.childNodes[3].textContent = qt;
+      } else if (e.target.classList.contains('select-quantity__minus')) {
+         let qt = parseInt(el.childNodes[3].textContent);
+         if (qt > 1) {
+            qt--;
+            el.childNodes[3].textContent = qt;
+         }
+      }
+   })
+})
+
+
 var ua = window.navigator.userAgent;
 var msie = ua.indexOf("MSIE ");
 var isMobile = { Android: function () { return navigator.userAgent.match(/Android/i); }, BlackBerry: function () { return navigator.userAgent.match(/BlackBerry/i); }, iOS: function () { return navigator.userAgent.match(/iPhone|iPad|iPod/i); }, Opera: function () { return navigator.userAgent.match(/Opera Mini/i); }, Windows: function () { return navigator.userAgent.match(/IEMobile/i); }, any: function () { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); } };
@@ -980,35 +1005,6 @@ if (quantityButtons.length > 0) {
 		});
 	}
 }
-const fixedBlock = document.querySelector('.catalog__menu'),
-   catalogTitle = document.querySelector('.catalog__title'),
-   widthBlock = fixedBlock.clientWidth,
-   sliderBlock = document.querySelector('.intro__content');
-
-
-const fixedScrollBlock = () => {
-   let scrollDistance = window.scrollY;
-   offsetTop = sliderBlock.clientHeight;
-   console.log(widthBlock);
-   
-   //console.log(offsetTop);
-   //console.log(scrollDistance);
-if (scrollDistance > offsetTop ){
-   fixedBlock.classList.add('fixed');
-   fixedBlock.style.width = widthBlock + 'px';
-   catalogTitle.classList.add('himargin')
-
-}else{
-   fixedBlock.classList.remove('fixed', '_container');
-   catalogTitle.classList.remove('himargin')
-}
-
-
-}
-
-
-window.addEventListener('scroll', fixedScrollBlock);
-
 let scr_body = document.querySelector('body');
 let scr_blocks = document.querySelectorAll('._scr-sector');
 let scr_items = document.querySelectorAll('._scr-item');
@@ -1425,7 +1421,393 @@ function scroll_animate(event) {
 	//disableScroll();
 }
 
-// // Dynamic Adapt v.1
+//BildSlider
+let sliders = document.querySelectorAll('._swiper');
+if (sliders) {
+	for (let index = 0; index < sliders.length; index++) {
+		let slider = sliders[index];
+		if (!slider.classList.contains('swiper-bild')) {
+			let slider_items = slider.children;
+			if (slider_items) {
+				for (let index = 0; index < slider_items.length; index++) {
+					let el = slider_items[index];
+					el.classList.add('swiper-slide');
+				}
+			}
+			let slider_content = slider.innerHTML;
+			let slider_wrapper = document.createElement('div');
+			slider_wrapper.classList.add('swiper-wrapper');
+			slider_wrapper.innerHTML = slider_content;
+			slider.innerHTML = '';
+			slider.appendChild(slider_wrapper);
+			slider.classList.add('swiper-bild');
+		}
+		if (slider.classList.contains('_gallery')) {
+			//slider.data('lightGallery').destroy(true);
+		}
+	}
+	sliders_bild_callback();
+}
+
+function sliders_bild_callback(params) { }
+
+let slider_intro = new Swiper('.slider-intro__body', {
+	
+	effect: 'fade',
+	
+	autoplay: {
+		delay: 3000,
+		disableOnInteraction: false,
+	},
+	fadeEffect: {
+		crossFade: true
+	},
+	
+	
+	//observer: true,
+	//observeParents: true,
+	slidesPerView: 1,
+	spaceBetween: 100,
+	//autoHeight: true,
+	speed: 800,
+	//touchRatio: 0,
+	//simulateTouch: false,
+	loop: true,
+	//preloadImages: false,
+	//lazy: true,
+	// Dotts
+	// pagination: {
+	// 	el: '.slider-quality__pagging',
+	// 	clickable: true,
+	// },
+	// Arrows
+	navigation: {
+		nextEl: '.slider-intro__control-lft',
+		prevEl: '.slider-intro__control-rt',
+	},
+	/*
+	breakpoints: {
+		320: {
+			slidesPerView: 1,
+			spaceBetween: 0,
+			autoHeight: true,
+		},
+		768: {
+			slidesPerView: 1,
+			spaceBetween: 20,
+		},
+		992: {
+			slidesPerView: 1,
+			spaceBetween: 20,
+		},
+		1268: {
+			slidesPerView: 1,
+			spaceBetween: 30,
+		},
+	},
+	*/
+	// on: {
+	// 	lazyImageReady: function () {
+	// 		ibg();
+	// 	},
+	// }
+	// And if we need scrollbar
+	// scrollbar: {
+	// 	el: '.swiper-scrollbar',
+	// },
+});
+
+const fixedBlock = document.querySelector('.page__sticky-menu'),
+   catalogContainer = document.querySelector('.page__container'),
+   widthBlock = fixedBlock.clientWidth,
+   sliderBlock = document.querySelector('.intro__content'),
+
+   fixedLeftBlock = document.querySelector('.page__nav'),
+   sideBlock = document.querySelector('.page__side'),
+   container = document.querySelector('.page__container'),
+   offsetLeft = container.offsetLeft + 20,
+   smallOffsetTop = 60,
+   sideBlockWidth = sideBlock.clientWidth;
+
+
+
+const fixedScrollBlock = () => {
+   let scrollDistance = window.scrollY;
+   offsetTop = sliderBlock.clientHeight;
+   // console.log(widthBlock);
+   //console.log(offsetTop);
+   //console.log(scrollDistance);
+   if (scrollDistance > offsetTop) {
+      fixedBlock.classList.add('fixed');
+      //fixedBlock.style.width = widthBlock + 'px';
+      catalogContainer.classList.add('himargin')
+   } else {
+      fixedBlock.classList.remove('fixed');
+      catalogContainer.classList.remove('himargin')
+   }
+
+   if (scrollDistance > offsetTop && scrollDistance <= 950) {
+      fixedLeftBlock.classList.add('absolute');
+      fixedLeftBlock.style.top = (scrollDistance - offsetTop) + 'px';
+      //console.log(fixedLeftBlock.style.top);
+
+      //catalogTitle.classList.add('himargin')
+   } else {
+      if (scrollDistance > 950) {
+         fixedLeftBlock.style.top = 440 + 'px';
+
+      } else {
+
+         fixedLeftBlock.classList.remove('absolute');
+         //catalogTitle.classList.remove('himargin')
+      }
+   }
+
+
+}
+
+window.addEventListener('scroll', fixedScrollBlock);
+
+document.addEventListener('DOMContentLoaded', () => {
+   const productsBtn = document.querySelectorAll('.showcase__btn');
+   const cartProductList = document.querySelector('.cart__list');
+   const cart = document.querySelector('.cart');
+   const cartQuantity = document.querySelector('.cart__qnt');
+   const fullPrice = document.querySelector('.fullprice');
+   const amount = document.querySelector('.amount__value');
+   const orderModalOpenProd = document.querySelector('.order-modal__btn');
+   const orderModalList = document.querySelector('.order-modal__list');
+   let price = 0;
+   let randomId = 0;
+   let productArray = [];
+
+   // const randomId = () => {
+   //    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+   // };
+
+   const priceWithoutSpaces = (str) => {
+      return str.replace(/\s/g, '');
+   };
+
+   const normalPrice = (str) => {
+      return String(str).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+   };
+
+   const plusFullPrice = (currentPrice) => {
+      return price += currentPrice;
+   };
+
+   const minusFullPrice = (currentPrice) => {
+      return price -= currentPrice;
+   };
+
+   const printQuantity = () => {
+      let productListLenght = cartProductList.querySelector('.simplebar-content').children.length;
+      //console.log(productListLenght);
+
+      cartQuantity.textContent = productListLenght;
+      productListLenght > 0 ? cart.classList.add('active') : cart.classList.remove('active');
+
+   };
+
+   const printFullPrice = () => {
+      fullPrice.textContent = price;//`${normalPrice(price)} ₽`;
+      amount.textContent = price;
+   };
+
+   const generateCartProduct = (img, title, price, id) => {
+      return `
+   <li class="cart__item">
+      <article class="cart__product cart-product" data-id="${id}">
+         <img src="${img}" alt="" class="cart-product__img">
+        
+            <div class="cart-product__text">
+               <div class="cart-product__title">${title}</div>
+               <span class="cart-product__price rub">${price}</span>
+            </div>
+            <button class="cart-product__delete" aria-label="Удалить товар"> </button>
+		</article>
+   </li> 
+   `;
+   };
+
+   const deleteProducts = (productParent) => {
+      let id = productParent.querySelector('.cart-product').dataset.id;
+      //document.querySelector(`.product[data-id="${id}"]`).querySelector('.product__btn').disabled = false;
+      let currentPrice = parseInt(priceWithoutSpaces(productParent.querySelector('.cart-product__price').textContent));
+      minusFullPrice(currentPrice);
+      printFullPrice();
+      productParent.remove();
+      printQuantity();
+      updateStorage();
+   };
+
+   const countSumm = () => {
+
+      document.querySelectorAll('.cart__item').forEach(el => {
+         price += parseInt(el.querySelector('.cart-product__price').textContent);
+      });
+   };
+
+   const initialStorage = () => {
+      if (localStorage.getItem('products') !== null) {
+         cartProductList.querySelector('.simplebar-content').innerHTML = localStorage.getItem('products');
+         printQuantity();
+         countSumm();
+         printFullPrice();
+
+      }
+   };
+
+   initialStorage();
+
+   const updateStorage = () => {
+      let parent = cartProductList.querySelector('.simplebar-content');
+      let html = parent.innerHTML;
+      html = html.trim();
+      console.log(html);
+      console.log(html.length);
+
+      if (html.length) {
+         localStorage.setItem('products', html);
+      } else {
+         localStorage.removeItem('products');
+      }
+
+   };
+
+   productsBtn.forEach(el => {
+      el.closest('.showcase').setAttribute('data-id', ++randomId);
+
+      el.addEventListener('click', (e) => {
+         let self = e.currentTarget;
+         let parent = self.closest('.showcase');
+         let id = parent.dataset.id;
+         let img = parent.querySelector('.showcase__img img').getAttribute('src');
+
+
+         let title = parent.querySelector('.showcase__title').textContent;
+         let priceString = parent.querySelector('.showcase__price').textContent;
+         let priceNumber = parseInt(parent.querySelector('.showcase__price').textContent);
+
+         plusFullPrice(priceNumber);
+         printFullPrice();
+
+         cartProductList.querySelector('.simplebar-content').insertAdjacentHTML('afterbegin', generateCartProduct(img, title, priceNumber, id));
+
+         printQuantity();
+
+         updateStorage();
+      });
+   });
+
+   cartProductList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('cart-product__delete')) {
+         deleteProducts(e.target.closest('.cart__item'))
+      }
+   });
+
+   let flag = 0;
+   orderModalOpenProd.addEventListener('click', (e) => {
+      if (flag == 0) {
+         orderModalOpenProd.classList.add('open');
+         orderModalList.style.display = 'block';
+         flag = 1;
+      } else {
+         orderModalOpenProd.classList.remove('open');
+         orderModalList.style.display = 'none';
+         flag = 0;
+      }
+   });
+
+   document.querySelector('.modal').addEventListener('click', (e) => {
+      if (e.target.classList.contains('order-product__delete')) {
+         let id = e.target.closest('.order-modal__product').dataset.id;
+         let cartProduct = document.querySelector(`.cart-product[data-id="${id}"]`).closest('.cart__item');
+         deleteProducts(cartProduct);
+         e.target.closest('.order-modal__product').remove();
+      }
+   });
+
+   const generateModalProduct = (img, title, price, id) => {
+      return `
+   <li class="order-modal__item">
+      <article class="order-modal__product order-product" data-id="${id}">
+      <img src="${img}" alt="" class="order-product__img">  
+         <div class="order-product__text">
+            <div class="order-product__title">${title}</div>
+            <div class="order-product__price rub">${price}</div>
+         </div>
+            <button class="order-product__delete">Удалить</button>
+      </article>
+   </li>
+   `;
+   };
+
+   const modal = new GraphModal({
+      isOpen: (modal) => {
+         console.log('opened');
+         let array = cartProductList.querySelector('.simplebar-content').children;
+         let fullprice = fullPrice.textContent;
+         let length = array.length;
+         document.querySelector('.order-modal__quantity span').textContent = `${length} шт`;
+         document.querySelector('.order-modal__summ span').textContent = `${fullprice}`;
+
+                 
+         for (item of array) {
+            let img = item.querySelector('.cart-product__img').getAttribute('src');
+            let title = item.querySelector('.cart-product__title').textContent;
+            let price = item.querySelector('.cart-product__price').textContent;
+            let id = item.querySelector('.cart-product').dataset.id;
+
+            orderModalList.insertAdjacentHTML('afterbegin', generateModalProduct(img, title, price, id));
+            
+            let obj = {};
+            obj.title = title;
+            obj.price = price;
+            productArray.push(obj);
+         }
+
+         
+
+      },
+      isClose: () => {
+         console.log('closed');
+      }
+   });
+
+   document.querySelector('.order').addEventListener('submit', (e) => {
+      e.preventDefault();
+      let self = e.currentTarget;
+
+      let formData = new FormData();
+      let name = self.querySelector('[name="Имя"]').value;
+      let tel = self.querySelector('[name="Телефон"]').value;
+      let mail = self.querySelector('[name="Email"]').value;
+      formData.append('Товары', JSON.stringify(productArray));
+      formData.append('Имя', name);
+      formData.append('Телефон', tel);
+      formData.append('Email', mail);
+
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function () {
+         if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+               console.log('Отправлено');
+
+            }
+         }
+      }
+
+      xhr.open('POST', 'mail.php', true);
+      xhr.send(formData);
+
+      self.reset();
+   });
+
+})
+
+//// Dynamic Adapt v.1
 // HTML data-da="where(uniq class name),position(digi),when(breakpoint)"
 // e.x. data-da="item,2,992"
 // Andrikanych Yevhen 2020
@@ -1562,98 +1944,16 @@ function scroll_animate(event) {
 		//const viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 	}
 }());
-//BildSlider
-let sliders = document.querySelectorAll('._swiper');
-if (sliders) {
-	for (let index = 0; index < sliders.length; index++) {
-		let slider = sliders[index];
-		if (!slider.classList.contains('swiper-bild')) {
-			let slider_items = slider.children;
-			if (slider_items) {
-				for (let index = 0; index < slider_items.length; index++) {
-					let el = slider_items[index];
-					el.classList.add('swiper-slide');
-				}
-			}
-			let slider_content = slider.innerHTML;
-			let slider_wrapper = document.createElement('div');
-			slider_wrapper.classList.add('swiper-wrapper');
-			slider_wrapper.innerHTML = slider_content;
-			slider.innerHTML = '';
-			slider.appendChild(slider_wrapper);
-			slider.classList.add('swiper-bild');
+document.querySelectorAll('.sidemenu__link').forEach((item) =>
+	item.addEventListener('click', () => {
+		const subl = item.nextElementSibling;
+		//subl.classList.toggle('_active');
+		if(subl.classList.contains('_active')){
+			subl.classList.remove('_active');
+		}else{
+			document.querySelectorAll('.sidemenu__sub-list').forEach((item) => item.classList.remove('_active'));
+			subl.classList.add('_active');
 		}
-		if (slider.classList.contains('_gallery')) {
-			//slider.data('lightGallery').destroy(true);
-		}
-	}
-	sliders_bild_callback();
-}
-
-function sliders_bild_callback(params) { }
-
-let slider_intro = new Swiper('.slider-intro__body', {
-	
-	effect: 'fade',
-	
-	autoplay: {
-		delay: 3000,
-		disableOnInteraction: false,
-	},
-	fadeEffect: {
-		crossFade: true
-	},
-	
-	
-	//observer: true,
-	//observeParents: true,
-	slidesPerView: 1,
-	spaceBetween: 100,
-	//autoHeight: true,
-	speed: 800,
-	//touchRatio: 0,
-	//simulateTouch: false,
-	loop: true,
-	//preloadImages: false,
-	//lazy: true,
-	// Dotts
-	// pagination: {
-	// 	el: '.slider-quality__pagging',
-	// 	clickable: true,
-	// },
-	// Arrows
-	navigation: {
-		nextEl: '.slider-intro__control-lft',
-		prevEl: '.slider-intro__control-rt',
-	},
-	/*
-	breakpoints: {
-		320: {
-			slidesPerView: 1,
-			spaceBetween: 0,
-			autoHeight: true,
-		},
-		768: {
-			slidesPerView: 1,
-			spaceBetween: 20,
-		},
-		992: {
-			slidesPerView: 1,
-			spaceBetween: 20,
-		},
-		1268: {
-			slidesPerView: 1,
-			spaceBetween: 30,
-		},
-	},
-	*/
-	// on: {
-	// 	lazyImageReady: function () {
-	// 		ibg();
-	// 	},
-	// }
-	// And if we need scrollbar
-	// scrollbar: {
-	// 	el: '.swiper-scrollbar',
-	// },
-});
+		
+	})
+)

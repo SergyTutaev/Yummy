@@ -1578,7 +1578,8 @@ document.addEventListener('DOMContentLoaded', () => {
    const orderModalOpenProd = document.querySelector('.order-modal__btn');
    const orderModalList = document.querySelector('.order-modal__list');
    let totalPrice = 0;
-   let randomId = 0;
+   let setId = 0;
+   let flag = 0;
    let productArray = [];
 
    // const randomId = () => {
@@ -1615,7 +1616,7 @@ document.addEventListener('DOMContentLoaded', () => {
       amount.textContent = totalPrice;
    };
 
-   const generateCartProduct = (img, title, price, id, qt) => {
+   const generateCartProduct = (img, title, weight, price, id, qt) => {
       return `<li class="cart__item">
          <article class="cart__product cart-product" data-id="${id}">
             <img src="${img}" alt="" class="cart-product__img">
@@ -1623,6 +1624,7 @@ document.addEventListener('DOMContentLoaded', () => {
                <div class="cart-product__text">
                   <div class="cart-product__title">${title}</div>
                   <div class="cart-product__clarifying">
+                     <div class="cart-product__weight">${weight}</div>   
                      <div class="cart-product__price rub">${price}</div>
                      <div class="cart-product__quantity">
                         <div class="cart-product__minus">-</div>
@@ -1657,7 +1659,7 @@ document.addEventListener('DOMContentLoaded', () => {
       li.querySelector('.cart-product__ttlprice').textContent = sumItem;
    };
 
-   function reCountItemPrice(li){
+   function reCountItemPrice(li) {
       let priceItem = parseInt(li.querySelector('.cart-product__price').textContent);
       let qt = parseInt(li.querySelector('.cart-product__value').textContent);
       let sumItem = priceItem * qt;
@@ -1665,23 +1667,42 @@ document.addEventListener('DOMContentLoaded', () => {
    }
 
    productsBtn.forEach(el => {
-      el.closest('.showcase').setAttribute('data-id', ++randomId);
-
+      el.closest('.showcase').setAttribute('data-id', ++setId);
       el.addEventListener('click', (e) => {
          let self = e.currentTarget;
          let parent = self.closest('.showcase');
          let id = parent.dataset.id;
          let img = parent.querySelector('.showcase__img img').getAttribute('src');
-         let qt = parent.querySelector('.select-quantity__value').textContent;
+         let qt = parseInt(parent.querySelector('.select-quantity__value').textContent);
          let title = parent.querySelector('.showcase__title').textContent;
+         let weight = parent.querySelector('.select-weight__current').textContent;
          let priceNumber = parseInt(parent.querySelector('.showcase__price').textContent);
-         cartProductList.querySelector('.simplebar-content').insertAdjacentHTML('afterbegin', generateCartProduct(img, title, priceNumber, id, qt));
 
-         printQuantity();
-         countItemPrice();
-         //updateStorage(); 
-         countTotalPrice();
-         printFullPrice();
+         if (cartProductList !== null) {
+            flag = 0;
+            cartProductList.querySelectorAll('.cart__product').forEach(el => {
+               let attr = el.dataset.id;
+
+               if ((attr === id) && (el.querySelector('.cart-product__weight').textContent == weight)){
+                     let newValue = parseInt(el.querySelector('.cart-product__value').textContent);
+                     newValue = qt + newValue;
+                     el.querySelector('.cart-product__value').textContent = parseInt(newValue);
+                     reCountItemPrice(el);
+                     countTotalPrice();
+                     printFullPrice();
+                     flag = 1;                                                                                    
+               }
+            })
+         }
+
+         if (flag === 0) {
+            cartProductList.querySelector('.simplebar-content').insertAdjacentHTML('afterbegin', generateCartProduct(img, title, weight, priceNumber, id, qt));
+            printQuantity();
+            countItemPrice();
+            //updateStorage(); 
+            countTotalPrice();
+            printFullPrice();
+         }
       });
    });
 
@@ -1690,21 +1711,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target.classList.contains('cart-product__delete')) {
          deleteProducts(e.target.closest('.cart__item'));
       } else if (e.target.classList.contains('cart-product__minus')) {
-         let li = e.target.closest('.cart__item');                 
+         let li = e.target.closest('.cart__item');
          let qt = li.querySelector('.cart-product__value').textContent;
          if (qt > 1) {
             qt--;
             li.querySelector('.cart-product__value').textContent = qt;
-            reCountItemPrice(e.target.closest('.cart__item'));
+            reCountItemPrice(li);
             countTotalPrice();
             printFullPrice();
          }
       } else if (e.target.classList.contains('cart-product__plus')) {
-         let li = e.target.closest('.cart__item');  
+         let li = e.target.closest('.cart__item');
          let qt = li.querySelector('.cart-product__value').textContent
          qt++;
          li.querySelector('.cart-product__value').textContent = qt;
-         reCountItemPrice(e.target.closest('.cart__item'));
+         reCountItemPrice(li);
          countTotalPrice();
          printFullPrice();
       }
@@ -1738,108 +1759,108 @@ document.addEventListener('DOMContentLoaded', () => {
 
    // };
 
-  
-
-  
-
-
-   let flag = 0;
-   orderModalOpenProd.addEventListener('click', (e) => {
-      if (flag == 0) {
-         orderModalOpenProd.classList.add('open');
-         orderModalList.style.display = 'block';
-         flag = 1;
-      } else {
-         orderModalOpenProd.classList.remove('open');
-         orderModalList.style.display = 'none';
-         flag = 0;
-      }
-   });
-
-   document.querySelector('.modal').addEventListener('click', (e) => {
-      if (e.target.classList.contains('order-product__delete')) {
-         let id = e.target.closest('.order-modal__product').dataset.id;
-         let cartProduct = document.querySelector(`.cart-product[data-id="${id}"]`).closest('.cart__item');
-         deleteProducts(cartProduct);
-         e.target.closest('.order-modal__product').remove();
-      }
-   });
-
-   const generateModalProduct = (img, title, price, id) => {
-      return `
-   <li class="order-modal__item">
-      <article class="order-modal__product order-product" data-id="${id}">
-      <img src="${img}" alt="" class="order-product__img">  
-         <div class="order-product__text">
-            <div class="order-product__title">${title}</div>
-            <div class="order-product__price rub">${price}</div>
-         </div>
-            <button class="order-product__delete">Удалить</button>
-      </article>
-   </li>
-   `;
-   };
-
-   const modal = new GraphModal({
-      isOpen: (modal) => {
-         console.log('opened');
-         let array = cartProductList.querySelector('.simplebar-content').children;
-         let fullprice = fullPrice.textContent;
-         let length = array.length;
-         document.querySelector('.order-modal__quantity span').textContent = `${length} шт`;
-         document.querySelector('.order-modal__summ span').textContent = `${fullprice}`;
-
-
-         for (item of array) {
-            let img = item.querySelector('.cart-product__img').getAttribute('src');
-            let title = item.querySelector('.cart-product__title').textContent;
-            let price = item.querySelector('.cart-product__price').textContent;
-            let id = item.querySelector('.cart-product').dataset.id;
-
-            orderModalList.insertAdjacentHTML('afterbegin', generateModalProduct(img, title, price, id));
-
-            let obj = {};
-            obj.title = title;
-            obj.price = price;
-            productArray.push(obj);
-         }
 
 
 
-      },
-      isClose: () => {
-         console.log('closed');
-      }
-   });
 
-   document.querySelector('.order').addEventListener('submit', (e) => {
-      e.preventDefault();
-      let self = e.currentTarget;
 
-      let formData = new FormData();
-      let name = self.querySelector('[name="Имя"]').value;
-      let tel = self.querySelector('[name="Телефон"]').value;
-      let mail = self.querySelector('[name="Email"]').value;
-      formData.append('Товары', JSON.stringify(productArray));
-      formData.append('Имя', name);
-      formData.append('Телефон', tel);
-      formData.append('Email', mail);
+   //    let flag = 0;
+   //    orderModalOpenProd.addEventListener('click', (e) => {
+   //       if (flag == 0) {
+   //          orderModalOpenProd.classList.add('open');
+   //          orderModalList.style.display = 'block';
+   //          flag = 1;
+   //       } else {
+   //          orderModalOpenProd.classList.remove('open');
+   //          orderModalList.style.display = 'none';
+   //          flag = 0;
+   //       }
+   //    });
 
-      let xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function () {
-         if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-               console.log('Отправлено');
+   //    document.querySelector('.modal').addEventListener('click', (e) => {
+   //       if (e.target.classList.contains('order-product__delete')) {
+   //          let id = e.target.closest('.order-modal__product').dataset.id;
+   //          let cartProduct = document.querySelector(`.cart-product[data-id="${id}"]`).closest('.cart__item');
+   //          deleteProducts(cartProduct);
+   //          e.target.closest('.order-modal__product').remove();
+   //       }
+   //    });
 
-            }
-         }
-      }
+   //    const generateModalProduct = (img, title, price, id) => {
+   //       return `
+   //    <li class="order-modal__item">
+   //       <article class="order-modal__product order-product" data-id="${id}">
+   //       <img src="${img}" alt="" class="order-product__img">  
+   //          <div class="order-product__text">
+   //             <div class="order-product__title">${title}</div>
+   //             <div class="order-product__price rub">${price}</div>
+   //          </div>
+   //             <button class="order-product__delete">Удалить</button>
+   //       </article>
+   //    </li>
+   //    `;
+   //    };
 
-      xhr.open('POST', 'mail.php', true);
-      xhr.send(formData);
+   //    const modal = new GraphModal({
+   //       isOpen: (modal) => {
+   //          console.log('opened');
+   //          let array = cartProductList.querySelector('.simplebar-content').children;
+   //          let fullprice = fullPrice.textContent;
+   //          let length = array.length;
+   //          document.querySelector('.order-modal__quantity span').textContent = `${length} шт`;
+   //          document.querySelector('.order-modal__summ span').textContent = `${fullprice}`;
 
-      self.reset();
-   });
+
+   //          for (item of array) {
+   //             let img = item.querySelector('.cart-product__img').getAttribute('src');
+   //             let title = item.querySelector('.cart-product__title').textContent;
+   //             let price = item.querySelector('.cart-product__price').textContent;
+   //             let id = item.querySelector('.cart-product').dataset.id;
+
+   //             orderModalList.insertAdjacentHTML('afterbegin', generateModalProduct(img, title, price, id));
+
+   //             let obj = {};
+   //             obj.title = title;
+   //             obj.price = price;
+   //             productArray.push(obj);
+   //          }
+
+
+
+   //       },
+   //       isClose: () => {
+   //          console.log('closed');
+   //       }
+   //    });
+
+   //    document.querySelector('.order').addEventListener('submit', (e) => {
+   //       e.preventDefault();
+   //       let self = e.currentTarget;
+
+   //       let formData = new FormData();
+   //       let name = self.querySelector('[name="Имя"]').value;
+   //       let tel = self.querySelector('[name="Телефон"]').value;
+   //       let mail = self.querySelector('[name="Email"]').value;
+   //       formData.append('Товары', JSON.stringify(productArray));
+   //       formData.append('Имя', name);
+   //       formData.append('Телефон', tel);
+   //       formData.append('Email', mail);
+
+   //       let xhr = new XMLHttpRequest();
+   //       xhr.onreadystatechange = function () {
+   //          if (xhr.readyState === 4) {
+   //             if (xhr.status === 200) {
+   //                console.log('Отправлено');
+
+   //             }
+   //          }
+   //       }
+
+   //       xhr.open('POST', 'mail.php', true);
+   //       xhr.send(formData);
+
+   //       self.reset();
+   //    });
 
 })
 

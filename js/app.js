@@ -1577,7 +1577,7 @@ document.addEventListener('DOMContentLoaded', () => {
    const amount = document.querySelector('.amount__value');
    const orderModalOpenProd = document.querySelector('.order-modal__btn');
    const orderModalList = document.querySelector('.order-modal__list');
-   let price = 0;
+   let totalPrice = 0;
    let randomId = 0;
    let productArray = [];
 
@@ -1593,88 +1593,76 @@ document.addEventListener('DOMContentLoaded', () => {
       return String(str).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
    };
 
-   const plusFullPrice = (currentPrice) => {
-      return price += currentPrice;
-   };
 
-   const minusFullPrice = (currentPrice) => {
-      return price -= currentPrice;
-   };
+   function countTotalPrice() {
+      totalPrice = 0;
+      document.querySelectorAll('.cart-product__ttlprice').forEach(el => {
+         let I = parseInt(el.textContent);
+         totalPrice += I;
+      });
+   }
 
-   const printQuantity = () => {
+   function printQuantity() {
       let productListLenght = cartProductList.querySelector('.simplebar-content').children.length;
       //console.log(productListLenght);
-
       cartQuantity.textContent = productListLenght;
       productListLenght > 0 ? cart.classList.add('active') : cart.classList.remove('active');
 
    };
 
-   const printFullPrice = () => {
-      fullPrice.textContent = price;//`${normalPrice(price)} ₽`;
-      amount.textContent = price;
+   function printFullPrice() {
+      fullPrice.textContent = totalPrice; //`${normalPrice(price)} ₽`;
+      amount.textContent = totalPrice;
    };
 
-   const generateCartProduct = (img, title, price, id) => {
-      return `
-   <li class="cart__item">
-      <article class="cart__product cart-product" data-id="${id}">
-         <img src="${img}" alt="" class="cart-product__img">
-        
-            <div class="cart-product__text">
-               <div class="cart-product__title">${title}</div>
-               <span class="cart-product__price rub">${price}</span>
-            </div>
-            <button class="cart-product__delete" aria-label="Удалить товар"> </button>
-		</article>
-   </li> 
-   `;
+   const generateCartProduct = (img, title, price, id, qt) => {
+      return `<li class="cart__item">
+         <article class="cart__product cart-product" data-id="${id}">
+            <img src="${img}" alt="" class="cart-product__img">
+
+               <div class="cart-product__text">
+                  <div class="cart-product__title">${title}</div>
+                  <div class="cart-product__clarifying">
+                     <div class="cart-product__price rub">${price}</div>
+                     <div class="cart-product__quantity">
+                        <div class="cart-product__minus">-</div>
+                        <div class="cart-product__value">${qt}</div>
+                        <div class="cart-product__plus">+</div>
+                     </div>
+
+                     <div class="cart-product__ttlprice rub">0</div>
+
+                  </div>
+               </div>
+               <button class="cart-product__delete" aria-label="Удалить товар"> </button>
+			</article>
+		</li>`
    };
 
-   const deleteProducts = (productParent) => {
-      let id = productParent.querySelector('.cart-product').dataset.id;
+   function deleteProducts(productParent) {
+      //let id = productParent.querySelector('.cart-product').dataset.id;
       //document.querySelector(`.product[data-id="${id}"]`).querySelector('.product__btn').disabled = false;
-      let currentPrice = parseInt(priceWithoutSpaces(productParent.querySelector('.cart-product__price').textContent));
-      minusFullPrice(currentPrice);
-      printFullPrice();
       productParent.remove();
       printQuantity();
-      updateStorage();
+      countTotalPrice();
+      printFullPrice();
+      //updateStorage();
    };
 
-   const countSumm = () => {
-
-      document.querySelectorAll('.cart__item').forEach(el => {
-         price += parseInt(el.querySelector('.cart-product__price').textContent);
-      });
+   function countItemPrice() {
+      let li = document.querySelector('.cart__item');
+      let priceItem = parseInt(li.querySelector('.cart-product__price').textContent);
+      let qt = parseInt(li.querySelector('.cart-product__value').textContent);
+      let sumItem = priceItem * qt;
+      li.querySelector('.cart-product__ttlprice').textContent = sumItem;
    };
 
-   const initialStorage = () => {
-      if (localStorage.getItem('products') !== null) {
-         cartProductList.querySelector('.simplebar-content').innerHTML = localStorage.getItem('products');
-         printQuantity();
-         countSumm();
-         printFullPrice();
-
-      }
-   };
-
-   initialStorage();
-
-   const updateStorage = () => {
-      let parent = cartProductList.querySelector('.simplebar-content');
-      let html = parent.innerHTML;
-      html = html.trim();
-      console.log(html);
-      console.log(html.length);
-
-      if (html.length) {
-         localStorage.setItem('products', html);
-      } else {
-         localStorage.removeItem('products');
-      }
-
-   };
+   function reCountItemPrice(li){
+      let priceItem = parseInt(li.querySelector('.cart-product__price').textContent);
+      let qt = parseInt(li.querySelector('.cart-product__value').textContent);
+      let sumItem = priceItem * qt;
+      li.querySelector('.cart-product__ttlprice').textContent = sumItem;
+   }
 
    productsBtn.forEach(el => {
       el.closest('.showcase').setAttribute('data-id', ++randomId);
@@ -1684,28 +1672,76 @@ document.addEventListener('DOMContentLoaded', () => {
          let parent = self.closest('.showcase');
          let id = parent.dataset.id;
          let img = parent.querySelector('.showcase__img img').getAttribute('src');
-
-
+         let qt = parent.querySelector('.select-quantity__value').textContent;
          let title = parent.querySelector('.showcase__title').textContent;
-         let priceString = parent.querySelector('.showcase__price').textContent;
          let priceNumber = parseInt(parent.querySelector('.showcase__price').textContent);
-
-         plusFullPrice(priceNumber);
-         printFullPrice();
-
-         cartProductList.querySelector('.simplebar-content').insertAdjacentHTML('afterbegin', generateCartProduct(img, title, priceNumber, id));
+         cartProductList.querySelector('.simplebar-content').insertAdjacentHTML('afterbegin', generateCartProduct(img, title, priceNumber, id, qt));
 
          printQuantity();
-
-         updateStorage();
+         countItemPrice();
+         //updateStorage(); 
+         countTotalPrice();
+         printFullPrice();
       });
    });
 
    cartProductList.addEventListener('click', (e) => {
+
       if (e.target.classList.contains('cart-product__delete')) {
-         deleteProducts(e.target.closest('.cart__item'))
+         deleteProducts(e.target.closest('.cart__item'));
+      } else if (e.target.classList.contains('cart-product__minus')) {
+         let li = e.target.closest('.cart__item');                 
+         let qt = li.querySelector('.cart-product__value').textContent;
+         if (qt > 1) {
+            qt--;
+            li.querySelector('.cart-product__value').textContent = qt;
+            reCountItemPrice(e.target.closest('.cart__item'));
+            countTotalPrice();
+            printFullPrice();
+         }
+      } else if (e.target.classList.contains('cart-product__plus')) {
+         let li = e.target.closest('.cart__item');  
+         let qt = li.querySelector('.cart-product__value').textContent
+         qt++;
+         li.querySelector('.cart-product__value').textContent = qt;
+         reCountItemPrice(e.target.closest('.cart__item'));
+         countTotalPrice();
+         printFullPrice();
       }
    });
+   // const initialStorage = () => {
+   //    if (localStorage.getItem('products') !== null) {
+   //       cartProductList.querySelector('.simplebar-content').innerHTML = localStorage.getItem('products');
+   //       printQuantity();
+
+
+   //       //countItemPrice();
+   //       //printFullPrice();
+
+   //    }
+   // };
+
+   // initialStorage();
+
+   // const updateStorage = () => {
+   //    let parent = cartProductList.querySelector('.simplebar-content');
+   //    let html = parent.innerHTML;
+   //    html = html.trim();
+   //    console.log(html);
+   //    console.log(html.length);
+
+   //    if (html.length) {
+   //       localStorage.setItem('products', html);
+   //    } else {
+   //       localStorage.removeItem('products');
+   //    }
+
+   // };
+
+  
+
+  
+
 
    let flag = 0;
    orderModalOpenProd.addEventListener('click', (e) => {
@@ -1753,7 +1789,7 @@ document.addEventListener('DOMContentLoaded', () => {
          document.querySelector('.order-modal__quantity span').textContent = `${length} шт`;
          document.querySelector('.order-modal__summ span').textContent = `${fullprice}`;
 
-                 
+
          for (item of array) {
             let img = item.querySelector('.cart-product__img').getAttribute('src');
             let title = item.querySelector('.cart-product__title').textContent;
@@ -1761,14 +1797,14 @@ document.addEventListener('DOMContentLoaded', () => {
             let id = item.querySelector('.cart-product').dataset.id;
 
             orderModalList.insertAdjacentHTML('afterbegin', generateModalProduct(img, title, price, id));
-            
+
             let obj = {};
             obj.title = title;
             obj.price = price;
             productArray.push(obj);
          }
 
-         
+
 
       },
       isClose: () => {
@@ -1807,7 +1843,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 })
 
-//// Dynamic Adapt v.1
+// Dynamic Adapt v.1
 // HTML data-da="where(uniq class name),position(digi),when(breakpoint)"
 // e.x. data-da="item,2,992"
 // Andrikanych Yevhen 2020

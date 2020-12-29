@@ -2394,31 +2394,6 @@ body.ie ._ibg img {
   margin-top: 122px;
 }
 
-.page__sticky-menu {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  font-size: 24px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  z-index: 3;
-  height: 50px;
-  color: #7e6624;
-  background: #eee9de;
-}
-
-.page__sticky-menu.fixed {
-  width: 100%;
-  position: fixed;
-  top: 123px;
-}
-
 .page__mainblock {
   background: #eee9de;
 }
@@ -2444,11 +2419,6 @@ body.ie ._ibg img {
 
 .page__nav {
   padding: 20px;
-}
-
-.page__nav.fixed {
-  position: fixed;
-  top: 173px;
 }
 
 .page__nav.absolute {

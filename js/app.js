@@ -1575,8 +1575,6 @@ document.addEventListener('DOMContentLoaded', () => {
    const cartQuantity = document.querySelector('.cart__qnt');
    const fullPrice = document.querySelector('.fullprice');
    const amount = document.querySelector('.amount__value');
-   const orderModalOpenProd = document.querySelector('.order-modal__btn');
-   const orderModalList = document.querySelector('.order-modal__list');
    let totalPrice = 0;
    let setId = 0;
    let flag = 0;
@@ -1586,13 +1584,13 @@ document.addEventListener('DOMContentLoaded', () => {
    //    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
    // };
 
-   const priceWithoutSpaces = (str) => {
-      return str.replace(/\s/g, '');
-   };
+   // const priceWithoutSpaces = (str) => {
+   //    return str.replace(/\s/g, '');
+   // };
 
-   const normalPrice = (str) => {
-      return String(str).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
-   };
+   // const normalPrice = (str) => {
+   //    return String(str).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+   // };
 
 
    function countTotalPrice() {
@@ -1605,7 +1603,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
    function printQuantity() {
       let productListLenght = cartProductList.querySelector('.simplebar-content').children.length;
-      //console.log(productListLenght);
       cartQuantity.textContent = productListLenght;
       productListLenght > 0 ? cart.classList.add('active') : cart.classList.remove('active');
 
@@ -1648,7 +1645,7 @@ document.addEventListener('DOMContentLoaded', () => {
       printQuantity();
       countTotalPrice();
       printFullPrice();
-      //updateStorage();
+      updateStorage();
    };
 
    function countItemPrice() {
@@ -1683,14 +1680,15 @@ document.addEventListener('DOMContentLoaded', () => {
             cartProductList.querySelectorAll('.cart__product').forEach(el => {
                let attr = el.dataset.id;
 
-               if ((attr === id) && (el.querySelector('.cart-product__weight').textContent == weight)){
-                     let newValue = parseInt(el.querySelector('.cart-product__value').textContent);
-                     newValue = qt + newValue;
-                     el.querySelector('.cart-product__value').textContent = parseInt(newValue);
-                     reCountItemPrice(el);
-                     countTotalPrice();
-                     printFullPrice();
-                     flag = 1;                                                                                    
+               if ((attr === id) && (el.querySelector('.cart-product__weight').textContent == weight)) {
+                  let newValue = parseInt(el.querySelector('.cart-product__value').textContent);
+                  newValue = qt + newValue;
+                  el.querySelector('.cart-product__value').textContent = parseInt(newValue);
+                  reCountItemPrice(el);
+                  countTotalPrice();
+                  printFullPrice();
+                  flag = 1;
+                  updateStorage();
                }
             })
          }
@@ -1699,9 +1697,9 @@ document.addEventListener('DOMContentLoaded', () => {
             cartProductList.querySelector('.simplebar-content').insertAdjacentHTML('afterbegin', generateCartProduct(img, title, weight, priceNumber, id, qt));
             printQuantity();
             countItemPrice();
-            //updateStorage(); 
             countTotalPrice();
             printFullPrice();
+            updateStorage();
          }
       });
    });
@@ -1719,6 +1717,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reCountItemPrice(li);
             countTotalPrice();
             printFullPrice();
+            updateStorage();
          }
       } else if (e.target.classList.contains('cart-product__plus')) {
          let li = e.target.closest('.cart__item');
@@ -1728,36 +1727,32 @@ document.addEventListener('DOMContentLoaded', () => {
          reCountItemPrice(li);
          countTotalPrice();
          printFullPrice();
+         updateStorage();
       }
    });
-   // const initialStorage = () => {
-   //    if (localStorage.getItem('products') !== null) {
-   //       cartProductList.querySelector('.simplebar-content').innerHTML = localStorage.getItem('products');
-   //       printQuantity();
 
+   function initialStorage() {
+      if (localStorage.getItem('products') !== null) {
+         cartProductList.querySelector('.simplebar-content').innerHTML = localStorage.getItem('products');
+         printQuantity();
+         countTotalPrice();
+         printFullPrice();
+      }
+   };
 
-   //       //countItemPrice();
-   //       //printFullPrice();
+   initialStorage();
 
-   //    }
-   // };
-
-   // initialStorage();
-
-   // const updateStorage = () => {
-   //    let parent = cartProductList.querySelector('.simplebar-content');
-   //    let html = parent.innerHTML;
-   //    html = html.trim();
-   //    console.log(html);
-   //    console.log(html.length);
-
-   //    if (html.length) {
-   //       localStorage.setItem('products', html);
-   //    } else {
-   //       localStorage.removeItem('products');
-   //    }
-
-   // };
+   function updateStorage() {
+      let parent = cartProductList.querySelector('.simplebar-content');
+      let html = parent.innerHTML;
+      html = html.trim();
+      let I = parseInt(cartQuantity.textContent);
+      if (I > 0) {
+         localStorage.setItem('products', html);
+      } else {
+         localStorage.removeItem('products');
+      }
+   };
 
 
 

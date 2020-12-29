@@ -1,6 +1,6 @@
 function email_test(input) {
 	return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(input.value);
-}
+};
 
 //document.addEventListener("DOMContentLoaded", function () {})
 const headerTopCenter = document.querySelector('.header__top-center');
@@ -1517,57 +1517,6 @@ let slider_intro = new Swiper('.slider-intro__body', {
 	// },
 });
 
-const fixedBlock = document.querySelector('.page__sticky-menu'),
-   catalogContainer = document.querySelector('.page__container'),
-   widthBlock = fixedBlock.clientWidth,
-   sliderBlock = document.querySelector('.intro__content'),
-
-   fixedLeftBlock = document.querySelector('.page__nav'),
-   sideBlock = document.querySelector('.page__side'),
-   container = document.querySelector('.page__container'),
-   offsetLeft = container.offsetLeft + 20,
-   smallOffsetTop = 60,
-   sideBlockWidth = sideBlock.clientWidth;
-
-
-
-const fixedScrollBlock = () => {
-   let scrollDistance = window.scrollY;
-   offsetTop = sliderBlock.clientHeight;
-   // console.log(widthBlock);
-   //console.log(offsetTop);
-   //console.log(scrollDistance);
-   if (scrollDistance > offsetTop) {
-      fixedBlock.classList.add('fixed');
-      //fixedBlock.style.width = widthBlock + 'px';
-      catalogContainer.classList.add('himargin')
-   } else {
-      fixedBlock.classList.remove('fixed');
-      catalogContainer.classList.remove('himargin')
-   }
-
-   if (scrollDistance > offsetTop && scrollDistance <= 950) {
-      fixedLeftBlock.classList.add('absolute');
-      fixedLeftBlock.style.top = (scrollDistance - offsetTop) + 'px';
-      //console.log(fixedLeftBlock.style.top);
-
-      //catalogTitle.classList.add('himargin')
-   } else {
-      if (scrollDistance > 950) {
-         fixedLeftBlock.style.top = 440 + 'px';
-
-      } else {
-
-         fixedLeftBlock.classList.remove('absolute');
-         //catalogTitle.classList.remove('himargin')
-      }
-   }
-
-
-}
-
-window.addEventListener('scroll', fixedScrollBlock);
-
 document.addEventListener('DOMContentLoaded', () => {
    const productsBtn = document.querySelectorAll('.showcase__btn');
    const cartProductList = document.querySelector('.cart__list');
@@ -2009,3 +1958,31 @@ document.querySelectorAll('.sidemenu__link').forEach((item) =>
 		
 	})
 )
+const sliderBlock = document.querySelector('.intro__content');
+const fixedLeftBlock = document.querySelector('.page__nav');
+const sideBlock = document.querySelector('.page__side');
+const sideBlockWidth = sideBlock.clientWidth;
+
+
+
+function fixedScrollBlock() {
+   let sideBlockHeight = sideBlock.clientHeight;
+   let fixedLeftBlockHeight = fixedLeftBlock.clientHeight;
+   let scrollDistance = window.scrollY;
+   offsetTop = sliderBlock.clientHeight;
+   offsetTopMax = sideBlockHeight + offsetTop - fixedLeftBlockHeight;
+  
+   if (scrollDistance > offsetTop && scrollDistance <= offsetTopMax) {
+      fixedLeftBlock.classList.add('absolute');
+      fixedLeftBlock.style.top = (scrollDistance - offsetTop) + 'px';    
+   } else {
+      if (scrollDistance > offsetTopMax) {
+         fixedLeftBlock.style.top = sideBlockHeight - fixedLeftBlockHeight + 'px';
+       } else {
+         fixedLeftBlock.classList.remove('absolute');        
+      }
+   }
+
+ }
+
+window.addEventListener('scroll', fixedScrollBlock);
